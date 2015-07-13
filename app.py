@@ -3,17 +3,27 @@ import os
 import fnmatch
 
 
-def grep(pattern, keyword):
+def file_generator(pattern):
     for root, dirs, files in os.walk("."):
         for item in fnmatch.filter(files, pattern):
-            with open(item, 'r') as f:
-                for number, line in enumerate(f, 1):
-                    if str(keyword) in line:
-                        print(
-                            os.path.join('', item) + ":",
-                            number,
-                            line.replace(keyword, '\x1b[31m %s\x1b[0m' % keyword)
-                        )
+            yield item
+
+
+def entries_generator(item, keyword):
+    with open(item, 'r') as f:
+        for number, line in enumerate(f, 1):
+            if str(keyword) in line:
+                yield (number, line)
+
+
+def grep(pattern, keyword):
+    for item in file_generator(pattern):
+        for number, line in entries_generator(item, keyword):
+            print(
+                os.path.join('', item) + ":",
+                number,
+                line.replace(keyword, '\x1b[31m %s\x1b[0m' % keyword)
+            )
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
