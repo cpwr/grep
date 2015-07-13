@@ -9,11 +9,10 @@ def grep(pattern, keyword):
             with open(item, 'r') as f:
                 for number, line in enumerate(f, 1):
                     if str(keyword) in line:
-                        l = line.split(keyword)
                         print(
-                            os.path.join('', str(item)) + ":",
+                            os.path.join('', item) + ":",
                             number,
-                            l[0] + '\x1b[31m %s\x1b[0m' % keyword + l[1]
+                            line.replace(keyword, '\x1b[31m %s\x1b[0m' % keyword)
                         )
 
 if __name__ == '__main__':
